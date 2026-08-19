@@ -22,42 +22,62 @@ export class QualityManager {
   private createProfile(width = window.innerWidth): QualityProfile {
     const memory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 4;
     const cores = navigator.hardwareConcurrency ?? 4;
+    const connection = (
+      navigator as Navigator & {
+        connection?: { saveData?: boolean; effectiveType?: string };
+      }
+    ).connection;
     const isSmall = width < 720;
-    const isLow = this.reducedMotion || memory <= 4 || cores <= 4 || isSmall;
+    const constrainedNetwork =
+      connection?.saveData === true || connection?.effectiveType === "slow-2g" || connection?.effectiveType === "2g";
+    const isLow =
+      this.reducedMotion || constrainedNetwork || memory <= 4 || cores <= 4 || isSmall;
     const isHigh = width >= 1100 && memory >= 8 && cores >= 6 && !this.reducedMotion;
 
     if (isLow) {
       return {
         level: "low",
-        pixelRatio: Math.min(window.devicePixelRatio || 1, 1.25),
-        torusLines: 36,
-        samplesPerLine: 168,
-        fieldParticles: 1800,
-        backgroundParticles: 120,
-        chakraParticles: 24,
+        pixelRatio: Math.min(window.devicePixelRatio || 1, 1.15),
+        maxFps: this.reducedMotion ? 1 : 30,
+        torusLines: 30,
+        samplesPerLine: 132,
+        fieldParticles: 1100,
+        backgroundParticles: 72,
+        chakraParticles: 16,
+        enableBackground: false,
+        enableHolographicShell: false,
+        enableCoreWireframe: false,
       };
     }
 
     if (isHigh) {
       return {
         level: "high",
-        pixelRatio: Math.min(window.devicePixelRatio || 1, 1.75),
+        pixelRatio: Math.min(window.devicePixelRatio || 1, 1.65),
+        maxFps: 60,
         torusLines: 56,
         samplesPerLine: 236,
-        fieldParticles: 5200,
-        backgroundParticles: 340,
-        chakraParticles: 54,
+        fieldParticles: 4600,
+        backgroundParticles: 300,
+        chakraParticles: 48,
+        enableBackground: true,
+        enableHolographicShell: true,
+        enableCoreWireframe: true,
       };
     }
 
     return {
       level: "medium",
-      pixelRatio: Math.min(window.devicePixelRatio || 1, 1.5),
+      pixelRatio: Math.min(window.devicePixelRatio || 1, 1.4),
+      maxFps: 45,
       torusLines: 44,
       samplesPerLine: 204,
-      fieldParticles: 3200,
-      backgroundParticles: 220,
-      chakraParticles: 36,
+      fieldParticles: 2800,
+      backgroundParticles: 180,
+      chakraParticles: 32,
+      enableBackground: true,
+      enableHolographicShell: true,
+      enableCoreWireframe: true,
     };
   }
 }

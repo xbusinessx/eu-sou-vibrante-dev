@@ -1,28 +1,12 @@
-import { useEffect } from "react";
-import {
-  AudioWaveform,
-  BookOpenText,
-  Clock3,
-  Compass,
-  Infinity as InfinityIcon,
-  Layers3,
-  Orbit,
-  ShieldCheck,
-  Sparkles,
-  Waves,
-  Zap,
-} from "lucide-react";
-import introCover from "../Repositório/optimized/5.webp";
-import { CosmicBackground } from "./components/CosmicBackground";
+import { useEffect, type CSSProperties } from "react";
 import { FAQ } from "./components/FAQ";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
 import { Hero } from "./components/Hero";
-import { MeditationEnergyAnimation } from "./components/MeditationEnergyAnimation";
 import { ModuleShowcase } from "./components/ModuleShowcase";
 import { OfferCard } from "./components/OfferCard";
 import { OriginalSlideshow } from "./components/OriginalSlideshow";
-import { Section } from "./components/Section";
+import { ScrollFieldExperience } from "./components/ScrollFieldExperience";
 import { TrackedSectionLink } from "./components/TrackedSectionLink";
 import {
   getAffiliateAttributionAgeDays,
@@ -114,58 +98,65 @@ const useHashAnchorScroll = () => {
       });
     };
 
+    const handleRepeatedAnchor = (event: MouseEvent) => {
+      const origin = event.target;
+      if (!(origin instanceof Element)) return;
+
+      const anchor = origin.closest<HTMLAnchorElement>('a[href^="#"]');
+      const hash = anchor?.getAttribute("href");
+      if (!hash || hash === "#" || window.location.hash !== hash) return;
+
+      let targetId = hash.slice(1);
+      try {
+        targetId = decodeURIComponent(targetId);
+      } catch {
+        // Keep the raw fragment when an external link provides malformed encoding.
+      }
+
+      const destination = document.getElementById(targetId);
+      if (!destination) return;
+
+      event.preventDefault();
+      destination.scrollIntoView({ block: "start" });
+    };
+
     scrollToHash();
     window.addEventListener("hashchange", scrollToHash);
-    return () => window.removeEventListener("hashchange", scrollToHash);
+    document.addEventListener("click", handleRepeatedAnchor);
+    return () => {
+      window.removeEventListener("hashchange", scrollToHash);
+      document.removeEventListener("click", handleRepeatedAnchor);
+    };
   }, []);
 };
 
-const quickFacts = [
-  { value: "19", label: "módulos na jornada", icon: BookOpenText },
-  { value: "8", label: "eixos de estudo", icon: Orbit },
-  { value: "Vitalício", label: "acesso à plataforma", icon: InfinityIcon },
-  { value: "7 dias", label: "de garantia", icon: ShieldCheck },
-];
-
 const recognitionPoints = [
   {
-    icon: Layers3,
     title: "Conhecimento sem integração",
-    text: "Muitas referências, técnicas e ideias — mas pouca relação clara entre elas.",
+    text: "Referências, técnicas e ideias se acumulam, mas não formam uma visão coerente.",
   },
   {
-    icon: Waves,
     title: "Ruído antes da percepção",
-    text: "A urgência do lado de fora ocupa o espaço que permitiria escutar o que acontece dentro.",
+    text: "A urgência externa ocupa o espaço necessário para observar o que acontece dentro.",
   },
   {
-    icon: Compass,
     title: "Direção sem centro",
-    text: "Decisões se acumulam, enquanto o sentido que deveria orientá-las fica difuso.",
+    text: "As decisões continuam chegando enquanto o sentido que deveria orientá-las fica difuso.",
   },
+];
+
+const productSpecs = [
+  ["19 módulos", "Uma progressão que parte dos fundamentos e avança até a integração."],
+  ["8 eixos", "Uma arquitetura temática para entender como os assuntos se conectam."],
+  ["Práticas e frequências", "Recursos de apoio para levar a reflexão além da leitura."],
+  ["Acesso vitalício", "Liberdade para pausar, voltar e reler em outros momentos."],
 ];
 
 const journeySteps = [
-  {
-    icon: Zap,
-    title: "Entre",
-    text: "Após a confirmação, seus dados de acesso chegam por e-mail.",
-  },
-  {
-    icon: BookOpenText,
-    title: "Percorra",
-    text: "Avance pelos 19 módulos no seu ritmo e volte sempre que precisar.",
-  },
-  {
-    icon: Sparkles,
-    title: "Experimente",
-    text: "Leve as práticas e os reconhecimentos para a sua rotina, sem pressa.",
-  },
-  {
-    icon: Clock3,
-    title: "Revisite",
-    text: "Use o acesso vitalício para reler o mapa em novos momentos da jornada.",
-  },
+  ["Receba", "Após a confirmação, o acesso chega automaticamente ao seu e-mail."],
+  ["Percorra", "Avance pelos módulos na ordem sugerida ou siga o eixo que chama você."],
+  ["Experimente", "Leve os exercícios de presença e observação para a rotina."],
+  ["Revisite", "Volte ao conteúdo quando um novo momento pedir outra leitura."],
 ];
 
 const App = () => {
@@ -177,233 +168,262 @@ const App = () => {
       <a className="skip-link" href="#conteudo-principal">
         Ir para o conteúdo
       </a>
-      <CosmicBackground />
+
+      <ScrollFieldExperience
+        rootSelector="[data-field-scroll-root]"
+        chapterSelector="[data-field-chapter]"
+      />
+      <div className="site-chromatic-noise" aria-hidden="true" />
       <Header />
 
-      <main id="conteudo-principal">
+      <main id="conteudo-principal" data-field-scroll-root>
         <Hero />
 
         <section
-          className="signal-strip"
-          aria-label="Informações rápidas sobre o Portal"
-          data-track-section="visao-geral"
+          id="chamado"
+          data-track-section="chamado"
+          data-field-chapter="1"
+          className="story-chapter story-chapter-noise"
         >
-          <div className="signal-strip-inner">
-            {quickFacts.map(({ value, label, icon: Icon }) => (
-              <div className="signal-item" key={label}>
-                <Icon aria-hidden="true" />
-                <span>
-                  <strong>{value}</strong>
-                  <small>{label}</small>
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <Section id="chamado" className="recognition-section">
-          <div className="section-container recognition-layout">
-            <div className="section-heading recognition-heading">
-              <p className="eyebrow">O ponto de partida</p>
-              <h2 className="section-title">
-                Quando há informação demais, <em>o centro some de vista.</em>
-              </h2>
-              <p className="section-lead">
-                O Portal nasceu para quem não busca mais uma resposta solta, mas uma estrutura que
-                ajude a relacionar presença, corpo, mente e percepção.
-              </p>
+          <div className="chapter-ghost-word" aria-hidden="true">RUÍDO</div>
+          <div className="chapter-frame chapter-frame-right">
+            <div className="section-signal">
+              <span>01</span>
+              <p>O ponto de ruptura</p>
             </div>
+            <h2 className="chapter-title">
+              Informação demais também pode <span>esconder o essencial.</span>
+            </h2>
+            <p className="chapter-lead">
+              O Portal começa onde as respostas soltas deixam de bastar. A proposta é reorganizar
+              percepção, presença, corpo e consciência dentro de um mesmo campo de estudo.
+            </p>
 
-            <div className="recognition-list">
-              {recognitionPoints.map(({ icon: Icon, title, text }, index) => (
-                <article className="recognition-item" key={title}>
-                  <span className="recognition-index">Sinal {String.fromCharCode(65 + index)}</span>
-                  <Icon aria-hidden="true" />
+            <div className="signal-sequence">
+              {recognitionPoints.map((item, index) => (
+                <article key={item.title}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
                   <div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
+                    <h3>{item.title}</h3>
+                    <p>{item.text}</p>
                   </div>
                 </article>
               ))}
             </div>
           </div>
-        </Section>
+        </section>
 
-        <Section id="campo" className="field-section">
-          <div className="section-container field-layout">
-            <div className="field-copy">
-              <p className="eyebrow">A visão do Portal</p>
-              <h2 className="section-title">
-                Um mapa vivo para perceber <em>as relações invisíveis.</em>
-              </h2>
-              <p className="section-lead">
-                O Portal organiza uma visão espiritual e integrativa da experiência. Em vez de
-                acumular conceitos, você observa como presença, identidade, vibração, corpo e
-                percepção se conectam dentro dessa proposta.
-              </p>
+        <section
+          id="campo"
+          data-track-section="campo"
+          data-field-chapter="2"
+          className="story-chapter story-chapter-field"
+        >
+          <div className="chapter-frame chapter-frame-left">
+            <div className="section-signal">
+              <span>02</span>
+              <p>A arquitetura invisível</p>
+            </div>
+            <h2 className="chapter-title">
+              Quando as partes se conectam, <span>o campo aparece.</span>
+            </h2>
+            <p className="chapter-lead">
+              Em vez de adicionar mais uma camada de informação, o programa propõe relações: entre
+              identidade e presença, mente e corpo, percepção e escolha.
+            </p>
 
-              <div className="field-principles" aria-label="Princípios do método">
-                <span><i />Compreender antes de idealizar</span>
-                <span><i />Perceber antes de reagir</span>
-                <span><i />Integrar antes de avançar</span>
-              </div>
-
-              <TrackedSectionLink
-                href="#conteudo"
-                label="Conhecer os 8 eixos"
-                ctaId="field_explore_axes"
-                section="campo"
-                variant="secondary"
-                endIcon="down"
-              />
+            <div className="architecture-counts" aria-label="Arquitetura do conteúdo">
+              <div><strong>08</strong><span>órbitas temáticas</span></div>
+              <div><strong>19</strong><span>pontos de estudo</span></div>
+              <div><strong>01</strong><span>jornada integrada</span></div>
             </div>
 
-            <div className="field-map-wrap">
-              <MeditationEnergyAnimation />
-              <p className="field-map-caption">
-                <span aria-hidden="true" />
-                Mapa responsivo à sua presença
+            <TrackedSectionLink
+              href="#conteudo"
+              label="Abrir os 8 eixos"
+              ctaId="field_explore_axes"
+              section="campo"
+              variant="secondary"
+              endIcon="down"
+            />
+          </div>
+        </section>
+
+        <section
+          id="portal"
+          data-track-section="portal"
+          data-field-chapter="3"
+          className="product-stage"
+        >
+          <div className="product-stage-frame">
+            <div className="product-object" aria-label="Visualização da arquitetura do programa">
+              <span className="product-object-depth product-object-depth-a" aria-hidden="true" />
+              <span className="product-object-depth product-object-depth-b" aria-hidden="true" />
+              <div className="product-glass-shell">
+                <div className="product-glass-meta">
+                  <span>PORTAL / CORE</span>
+                  <span>19·08</span>
+                </div>
+
+                <div className="product-nucleus" aria-hidden="true">
+                  {Array.from({ length: 8 }, (_, index) => (
+                    <span
+                      className="product-orbit"
+                      key={index}
+                      style={{
+                        "--orbit-size": `${38 + index * 7.4}%`,
+                        "--orbit-rotate": `${index * 12}deg`,
+                        "--orbit-alt-rotate": `${index * -9}deg`,
+                        "--orbit-opacity": 1 - index * 0.065,
+                      } as CSSProperties}
+                    />
+                  ))}
+                  <div className="product-node-field">
+                    {Array.from({ length: 19 }, (_, index) => (
+                      <i
+                        key={index}
+                        style={{ "--node-angle": `${index * (360 / 19)}deg` } as CSSProperties}
+                      />
+                    ))}
+                  </div>
+                  <b />
+                </div>
+
+                <div className="product-glass-copy">
+                  <small>PROGRAMA DIGITAL</small>
+                  <strong>Portal da<br />Consciência</strong>
+                  <p>19 módulos conectados em 8 eixos de estudo e prática.</p>
+                </div>
+
+                <div className="product-glass-progress" aria-hidden="true">
+                  <span>ARQUITETURA ATIVA</span>
+                  <i><b /></i>
+                  <span>08 / 19</span>
+                </div>
+              </div>
+              <div className="product-object-scan" aria-hidden="true" />
+            </div>
+
+            <div className="product-stage-copy">
+              <div className="section-signal">
+                <span>03</span>
+                <p>O produto</p>
+              </div>
+              <h2 className="chapter-title">
+                Não é uma coleção solta. <span>É uma arquitetura para atravessar.</span>
+              </h2>
+              <p className="chapter-lead">
+                Um programa digital de estudos e práticas, entregue em uma plataforma on-line para
+                você percorrer sem prazo de expiração.
               </p>
+
+              <div className="product-specs">
+                {productSpecs.map(([title, text], index) => (
+                  <article key={title}>
+                    <small>{String(index + 1).padStart(2, "0")}</small>
+                    <div><h3>{title}</h3><p>{text}</p></div>
+                  </article>
+                ))}
+              </div>
             </div>
           </div>
-        </Section>
+        </section>
 
-        <Section id="portal" className="product-section">
-          <div className="section-container product-layout">
-            <div className="product-visual" aria-label="Capa de introdução do Portal da Consciência">
-              <div className="product-orbit product-orbit-a" aria-hidden="true" />
-              <div className="product-orbit product-orbit-b" aria-hidden="true" />
-              <div className="product-cover-stack" aria-hidden="true">
-                <span />
-                <span />
-                <img src={introCover} alt="" loading="lazy" decoding="async" />
+        <section
+          id="conteudo"
+          data-track-section="conteudo"
+          data-field-chapter="4"
+          className="curriculum-stage"
+        >
+          <div className="curriculum-stage-inner">
+            <header className="curriculum-heading">
+              <div className="section-signal">
+                <span>04</span>
+                <p>Arquitetura do conteúdo</p>
               </div>
-              <div className="product-coordinate product-coordinate-top">MÓDULO / 01</div>
-              <div className="product-coordinate product-coordinate-bottom">ACESSO VITALÍCIO</div>
-            </div>
-
-            <div className="product-copy">
-              <p className="eyebrow">O produto</p>
-              <h2 className="section-title">
-                Não é um feed infinito. <em>É uma jornada com arquitetura.</em>
+              <h2>
+                8 eixos. 19 módulos.<br />
+                <span>Uma única progressão.</span>
               </h2>
-              <p className="section-lead">
-                O Portal da Consciência é um programa digital de estudos e práticas, entregue em
-                uma plataforma para você percorrer no seu tempo.
+              <p>
+                Selecione um eixo para abrir seus temas. Use as setas do teclado para navegar entre
+                eles.
               </p>
-
-              <div className="product-includes">
-                <div>
-                  <BookOpenText aria-hidden="true" />
-                  <span><strong>19 módulos</strong> do fundamento à integração</span>
-                </div>
-                <div>
-                  <Orbit aria-hidden="true" />
-                  <span><strong>8 eixos</strong> que organizam o mapa completo</span>
-                </div>
-                <div>
-                  <AudioWaveform aria-hidden="true" />
-                  <span><strong>Práticas e frequências</strong> como apoio ao estudo</span>
-                </div>
-                <div>
-                  <InfinityIcon aria-hidden="true" />
-                  <span><strong>Acesso vitalício</strong> para revisitar quando quiser</span>
-                </div>
-              </div>
-
-              <TrackedSectionLink
-                href="#investimento"
-                label="Ver acesso e investimento"
-                ctaId="product_view_offer"
-                section="portal"
-                endIcon="down"
-              />
-            </div>
-          </div>
-        </Section>
-
-        <Section id="conteudo" className="curriculum-section">
-          <div className="section-container">
-            <div className="section-heading curriculum-heading">
-              <p className="eyebrow">Por dentro da jornada</p>
-              <h2 className="section-title">
-                Dezenove módulos. <em>Oito eixos. Um só mapa.</em>
-              </h2>
-              <p className="section-lead">
-                Navegue pelos eixos abaixo para entender a lógica do conteúdo sem precisar
-                decifrar uma lista interminável de tópicos.
-              </p>
-            </div>
+            </header>
 
             <ModuleShowcase />
 
-            <div className="preview-block">
-              <div className="preview-intro">
-                <p className="eyebrow">Prévia visual</p>
-                <h3>Veja a linguagem de cada módulo antes de entrar.</h3>
+            <div className="module-deck">
+              <div className="module-deck-copy">
+                <span>19 + introdução</span>
+                <h3>Uma identidade visual para cada etapa da jornada.</h3>
                 <p>
-                  O acervo foi organizado como uma coleção visual, com uma identidade própria para
-                  cada etapa do percurso.
+                  Veja as capas que organizam o acervo antes de entrar. O carrossel carrega apenas
+                  os três módulos visíveis.
                 </p>
               </div>
               <OriginalSlideshow />
             </div>
           </div>
-        </Section>
+        </section>
 
-        <Section id="ritmo" className="journey-section">
-          <div className="section-container">
-            <div className="section-heading journey-heading">
-              <p className="eyebrow">Como funciona</p>
-              <h2 className="section-title">
-                O caminho é profundo. <em>O acesso é simples.</em>
-              </h2>
-            </div>
+        <section
+          id="ritmo"
+          data-track-section="ritmo"
+          data-field-chapter="5"
+          className="journey-stage"
+        >
+          <div className="journey-stage-inner">
+            <header>
+              <div className="section-signal">
+                <span>05</span>
+                <p>Como funciona</p>
+              </div>
+              <h2>Sem pressa artificial.<br /><span>Sem caminho confuso.</span></h2>
+            </header>
 
-            <ol className="journey-steps">
-              {journeySteps.map(({ icon: Icon, title, text }, index) => (
+            <ol className="journey-path">
+              {journeySteps.map(([title, text], index) => (
                 <li key={title}>
-                  <div className="journey-step-top">
-                    <span>0{index + 1}</span>
-                    <Icon aria-hidden="true" />
-                  </div>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
                   <h3>{title}</h3>
                   <p>{text}</p>
                 </li>
               ))}
             </ol>
 
-            <div className="clarity-note">
-              <ShieldCheck aria-hidden="true" />
-              <div>
-                <strong>Uma proposta espiritual, não uma promessa de resultado.</strong>
-                <p>
-                  O Portal oferece estudo, reflexão e práticas integrativas. Sua experiência é
-                  individual e o conteúdo não substitui orientação médica ou psicológica.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Section>
-
-        <Section id="investimento" className="offer-section">
-          <OfferCard />
-        </Section>
-
-        <Section id="duvidas" className="faq-section">
-          <div className="section-container">
-            <div className="section-heading faq-heading">
-              <p className="eyebrow">Dúvidas frequentes</p>
-              <h2 className="section-title">
-                Clareza antes de <em>atravessar o portal.</em>
-              </h2>
-              <p className="section-lead">
-                Formato, acesso, garantia e proposta — as respostas essenciais estão aqui.
+            <div className="transparency-note">
+              <strong>Uma proposta espiritual, não uma promessa de resultado.</strong>
+              <p>
+                O Portal oferece estudo, reflexão e práticas integrativas. A experiência é
+                individual e o conteúdo não substitui orientação médica ou psicológica.
               </p>
             </div>
+          </div>
+        </section>
+
+        <section
+          id="investimento"
+          data-track-section="investimento"
+          data-field-chapter="6"
+          className="investment-stage"
+        >
+          <OfferCard />
+        </section>
+
+        <section id="duvidas" data-track-section="duvidas" className="faq-stage">
+          <div className="faq-stage-inner">
+            <header>
+              <div className="section-signal">
+                <span>07</span>
+                <p>Antes de entrar</p>
+              </div>
+              <h2>Clareza também faz<br /><span>parte da travessia.</span></h2>
+              <p>Formato, acesso, garantia e proposta — sem letras escondidas.</p>
+            </header>
             <FAQ />
           </div>
-        </Section>
+        </section>
       </main>
 
       <Footer />

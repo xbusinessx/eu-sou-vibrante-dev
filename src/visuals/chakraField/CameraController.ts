@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { dampVector2 } from "./math";
-import type { InteractionState, RenderState } from "./types";
+import { damp, dampVector2 } from "./math";
+import type { InteractionState, RenderState, ScrollDirectorState } from "./types";
 
 export class CameraController {
   readonly camera: THREE.PerspectiveCamera;
@@ -8,6 +8,7 @@ export class CameraController {
   private orbit = new THREE.Vector2();
   private targetOrbit = new THREE.Vector2();
   private target = new THREE.Vector3(0, 0.05, 0);
+  private currentFov = 34;
 
   constructor(width: number, height: number) {
     this.camera = new THREE.PerspectiveCamera(34, width / height, 0.1, 80);
@@ -19,7 +20,11 @@ export class CameraController {
     this.camera.updateProjectionMatrix();
   }
 
-  update(state: RenderState, interaction: InteractionState) {
+  update(
+    state: RenderState,
+    interaction: InteractionState,
+    narrative: ScrollDirectorState,
+  ) {
     const cameraDrift = (state.reducedMotion ? 0.14 : 0.28) * this.motionScale;
     this.targetOrbit.set(
       interaction.smoothPointer.x * 0.16 * this.motionScale +
@@ -30,11 +35,31 @@ export class CameraController {
 
     dampVector2(this.orbit, this.targetOrbit, 1.7, state.delta);
 
-    const dolly = Math.sin(state.loopPhase * Math.PI * 2) * 0.14 - state.intro * 0.14;
-    const z = 7.25 + dolly - state.expansion * 0.18 - state.activation * 0.34;
+    const dolly = state.reducedMotion
+      ? 0
+      : Math.sin(state.loopPhase * Math.PI * 2) * 0.1 - state.activation * 0.18;
+    const z = narrative.cameraZ + dolly - state.expansion * 0.06;
 
-    this.camera.position.set(this.orbit.x * 0.36, 0.08 + this.orbit.y * 0.24, z);
-    this.target.set(this.orbit.x * 0.08, 0.04 + this.orbit.y * 0.05 + state.activation * 0.03, 0);
+    this.camera.position.set(
+      narrative.cameraX + this.orbit.x * 0.36,
+      narrative.cameraY + this.orbit.y * 0.24,
+      z,
+    );
+    this.target.set(
+      narrative.cameraTargetX + this.orbit.x * 0.08,
+      narrative.cameraTargetY + this.orbit.y * 0.05 + state.activation * 0.03,
+      narrative.cameraTargetZ,
+    );
+
+    this.currentFov = state.reducedMotion
+      ? narrative.cameraFov
+      : damp(this.currentFov, narrative.cameraFov, 7, state.delta);
+    if (Math.abs(this.camera.fov - this.currentFov) > 0.005) {
+      this.camera.fov = this.currentFov;
+      this.camera.updateProjectionMatrix();
+    }
+
     this.camera.lookAt(this.target);
+    this.camera.rotateZ(narrative.cameraRoll);
   }
 }

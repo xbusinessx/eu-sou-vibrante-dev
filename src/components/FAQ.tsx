@@ -39,11 +39,9 @@ export const FAQ = () => {
                 aria-controls={`faq-panel-${index}`}
                 onClick={() => toggleItem(index, item.question)}
               >
-                <span className="font-medium">{item.question}</span>
+                <span>{item.question}</span>
                 <ChevronDown
-                  className={`h-5 w-5 shrink-0 text-gold transition-transform ${
-                    isOpen ? "rotate-180" : ""
-                  }`}
+                  className={isOpen ? "is-open" : ""}
                   aria-hidden="true"
                 />
               </button>
@@ -56,7 +54,7 @@ export const FAQ = () => {
                     animate={shouldReduceMotion ? undefined : { height: "auto", opacity: 1 }}
                     exit={shouldReduceMotion ? undefined : { height: 0, opacity: 0 }}
                     transition={{ duration: 0.28, ease: "easeOut" }}
-                    className="overflow-hidden"
+                    className="faq-answer-wrap"
                   >
                     <p className="faq-answer">{item.answer}</p>
                   </motion.div>

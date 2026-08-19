@@ -49,16 +49,16 @@ const backgroundFragment = `
     float edgeFade = smoothstep(0.76, 0.22, length(centered * vec2(0.82, 1.08)));
     float centerGlow = smoothstep(0.64, 0.04, length(centered * vec2(0.72, 1.18)));
 
-    vec3 deep = vec3(0.004, 0.006, 0.012);
-    vec3 green = vec3(0.006, 0.038, 0.032);
-    vec3 amber = vec3(0.075, 0.046, 0.018);
-    vec3 violet = vec3(0.045, 0.026, 0.085);
+    vec3 deep = vec3(0.003, 0.004, 0.012);
+    vec3 ionTeal = vec3(0.027, 0.11, 0.105);
+    vec3 ultraviolet = vec3(0.09, 0.072, 0.22);
+    vec3 moonstone = vec3(0.11, 0.115, 0.16);
     vec3 color = deep;
-    color += green * smoothstep(0.82, 0.08, length(centered - vec2(-0.36, 0.1))) * 0.34;
-    color += amber * smoothstep(0.84, 0.12, length(centered - vec2(0.34, 0.03))) * 0.28;
-    color += violet * smoothstep(0.74, 0.1, length(centered - vec2(0.02, -0.08))) * 0.3;
-    color += vec3(0.15, 0.13, 0.07) * centerGlow * 0.1;
-    color += vec3(0.035, 0.06, 0.055) * field * 0.07;
+    color += ionTeal * smoothstep(0.82, 0.08, length(centered - vec2(-0.36, 0.1))) * 0.28;
+    color += ultraviolet * smoothstep(0.84, 0.12, length(centered - vec2(0.34, 0.03))) * 0.34;
+    color += ultraviolet * smoothstep(0.74, 0.1, length(centered - vec2(0.02, -0.08))) * 0.2;
+    color += moonstone * centerGlow * 0.055;
+    color += vec3(0.025, 0.052, 0.058) * field * 0.07;
     color *= vignette + 0.18;
 
     float alpha = clamp((centerGlow * 0.32 + field * 0.08 + edgeFade * 0.08) * edgeFade * uIntro, 0.0, 0.42);
@@ -93,8 +93,13 @@ const starsFragment = `
   void main() {
     vec2 uv = gl_PointCoord - 0.5;
     float d = length(uv);
-    float alpha = smoothstep(0.5, 0.0, d) * vAlpha * 0.55;
-    gl_FragColor = vec4(vec3(1.0, 0.88, 0.58), alpha);
+    float alpha = smoothstep(0.5, 0.0, d) * vAlpha * 0.42;
+    vec3 ultraviolet = vec3(0.4706, 0.4039, 0.9490);
+    vec3 ionTeal = vec3(0.3843, 0.8471, 0.7804);
+    vec3 moonstone = vec3(0.9255, 0.9255, 0.9569);
+    vec3 color = mix(ultraviolet, ionTeal, vAlpha);
+    color = mix(color, moonstone, smoothstep(0.72, 1.0, vAlpha) * 0.42);
+    gl_FragColor = vec4(color, alpha);
   }
 `;
 

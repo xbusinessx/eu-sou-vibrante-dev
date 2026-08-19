@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import slide05 from "../../Repositório/optimized/5.webp";
 import slide06 from "../../Repositório/optimized/6.webp";
 import slide07 from "../../Repositório/optimized/7.webp";
@@ -48,9 +48,11 @@ const slides = [
 const AUTOPLAY_INTERVAL_MS = 7200;
 
 export const OriginalSlideshow = () => {
+  const carouselRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isInView, setIsInView] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
   const visibleSlides = useMemo(
@@ -63,14 +65,26 @@ export const OriginalSlideshow = () => {
   );
 
   useEffect(() => {
-    if (shouldReduceMotion || isPaused || isHovered) return;
+    const carousel = carouselRef.current;
+    if (!carousel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsInView(entry.isIntersecting && entry.intersectionRatio >= 0.3),
+      { threshold: [0, 0.3, 0.6] },
+    );
+    observer.observe(carousel);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (shouldReduceMotion || isPaused || isHovered || !isInView) return;
 
     const intervalId = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % slides.length);
     }, AUTOPLAY_INTERVAL_MS);
 
     return () => window.clearInterval(intervalId);
-  }, [isHovered, isPaused, shouldReduceMotion]);
+  }, [isHovered, isInView, isPaused, shouldReduceMotion]);
 
   const goToPrevious = () => {
     setActiveIndex((current) => (current - 1 + slides.length) % slides.length);
@@ -84,6 +98,7 @@ export const OriginalSlideshow = () => {
 
   return (
     <div
+      ref={carouselRef}
       className="original-slideshow"
       role="region"
       aria-roledescription="carrossel"

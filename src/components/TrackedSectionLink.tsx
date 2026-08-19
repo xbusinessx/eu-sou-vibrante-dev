@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowRight, Sparkles } from "lucide-react";
+import { ArrowDown, ArrowRight } from "lucide-react";
 import type { AnchorHTMLAttributes } from "react";
 import { trackCtaClick } from "../lib/tracking";
 
@@ -54,9 +54,8 @@ export const TrackedSectionLink = ({
       className={`${variantClasses[variant]} ${className}`}
       onClick={handleClick}
     >
-      <Sparkles aria-hidden="true" className="h-4 w-4" />
-      <span>{label}</span>
-      <Icon aria-hidden="true" className="h-4 w-4" />
+      <span className="btn-label">{label}</span>
+      <span className="btn-icon" aria-hidden="true"><Icon /></span>
     </a>
   );
 };

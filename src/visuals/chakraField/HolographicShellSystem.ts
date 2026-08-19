@@ -41,9 +41,11 @@ const shellFragment = `
   void main() {
     float band = sin(vProgress * 6.2831853 * 2.0 - uTime * 0.22 + vPhase) * 0.5 + 0.5;
     float fade = smoothstep(0.0, 0.18, vProgress) * (1.0 - smoothstep(0.82, 1.0, vProgress));
-    vec3 teal = vec3(0.16, 0.88, 0.78);
-    vec3 gold = vec3(0.88, 0.66, 0.28);
-    vec3 color = mix(teal, gold, band * 0.72);
+    vec3 ultraviolet = vec3(0.4706, 0.4039, 0.9490);
+    vec3 ionTeal = vec3(0.3843, 0.8471, 0.7804);
+    vec3 moonstone = vec3(0.9255, 0.9255, 0.9569);
+    vec3 color = mix(ultraviolet, ionTeal, band * 0.72);
+    color = mix(color, moonstone, pow(band, 5.0) * 0.24);
     float alpha = (0.014 + band * 0.026) * fade * uIntro;
     gl_FragColor = vec4(color, alpha);
   }

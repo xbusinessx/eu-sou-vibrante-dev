@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import type { ButtonHTMLAttributes } from "react";
 import { useRef, useState } from "react";
 import {
@@ -108,9 +108,8 @@ export const TrackedCheckoutButton = ({
       disabled={buttonProps.disabled || isNavigating}
       onClick={handleClick}
     >
-      <Sparkles aria-hidden="true" className="h-4 w-4" />
-      <span>{label}</span>
-      <ArrowRight aria-hidden="true" className="h-4 w-4" />
+      <span className="btn-label">{label}</span>
+      <span className="btn-icon" aria-hidden="true"><ArrowUpRight /></span>
     </button>
   );
 };

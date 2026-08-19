@@ -80,12 +80,11 @@ const particleFragment = `
     float d = length(uv);
     float core = smoothstep(0.5, 0.0, d);
     float spark = smoothstep(0.18, 0.0, d);
-    vec3 gold = vec3(0.92, 0.68, 0.28);
-    vec3 teal = vec3(0.18, 0.88, 0.82);
-    vec3 violet = vec3(0.58, 0.38, 1.0);
-    vec3 color = mix(gold, teal, smoothstep(0.28, 0.72, vWarmth));
-    color = mix(color, violet, smoothstep(0.76, 1.0, vWarmth) * 0.48);
-    color = mix(color, vec3(1.0, 0.94, 0.72), spark * (0.42 + vEnergy * 0.36));
+    vec3 ultraviolet = vec3(0.4706, 0.4039, 0.9490);
+    vec3 ionTeal = vec3(0.3843, 0.8471, 0.7804);
+    vec3 moonstone = vec3(0.9255, 0.9255, 0.9569);
+    vec3 color = mix(ultraviolet, ionTeal, smoothstep(0.22, 0.78, vWarmth));
+    color = mix(color, moonstone, spark * (0.56 + vEnergy * 0.24));
     gl_FragColor = vec4(color, core * vAlpha * 0.38);
   }
 `;
@@ -138,7 +137,7 @@ export class EnergyParticleSystem implements SceneSystem {
       new THREE.ShaderMaterial({
         transparent: true,
         depthWrite: false,
-        depthTest: false,
+        depthTest: true,
         blending: THREE.AdditiveBlending,
         vertexShader: particleVertex,
         fragmentShader: particleFragment,

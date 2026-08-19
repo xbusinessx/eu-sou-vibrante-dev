@@ -1,6 +1,6 @@
 # Eu Sou Vibrante
 
-Landing page de conversão para o **Portal da Consciência**, um programa digital de estudos e práticas com 19 módulos organizados em 8 eixos. A experiência usa cartografia cósmica, profundidade 2.5D e um mapa vibracional interativo, preservando tracking e atribuição de checkout.
+Landing page de conversão para o **Portal da Consciência**, um programa digital de estudos e práticas com 19 módulos organizados em 8 eixos. A direção “NÚCLEO 19/8” usa uma única cena Three.js persistente — oito órbitas, dezenove nós e um núcleo de vidro/obsidiana — dirigida pelos sete capítulos do scroll, preservando tracking e atribuição de checkout.
 
 ## Stack
 
@@ -8,6 +8,7 @@ Landing page de conversão para o **Portal da Consciência**, um programa digita
 - React + TypeScript
 - Tailwind CSS
 - Framer Motion
+- Three.js com carregamento lazy e direção por scroll
 - Node.js 22.x para deploy
 - npm
 
@@ -34,7 +35,13 @@ Os PNGs originais permanecem como arquivos-fonte. A landing consome derivados We
 python scripts/optimize_assets.py
 ```
 
-O carrossel monta somente a capa ativa e as duas adjacentes, evitando carregar as 20 capas de uma vez no navegador.
+O carrossel monta somente a capa ativa e as duas adjacentes, evitando carregar as 20 capas de uma vez no navegador. O hero e o objeto principal do produto são gerados por WebGL/HTML/CSS; não dependem mais dos antigos rasters figurativos.
+
+## Experiência 3D
+
+`src/components/ScrollFieldExperience.tsx` mantém um canvas fixo durante a narrativa e traduz o progresso de cada seção em poses de câmera, escala, rotação, energia e expansão. A cena fica em `src/visuals/chakraField/` e usa um fallback abstrato em CSS caso WebGL não esteja disponível.
+
+Os capítulos são declarados em `src/App.tsx` com `data-field-chapter="0"` até `"6"`. Não existe scroll hijacking: a página continua usando rolagem nativa, teclado e tecnologias assistivas normalmente.
 
 ## Preview local
 

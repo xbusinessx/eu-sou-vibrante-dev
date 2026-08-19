@@ -77,14 +77,13 @@ const fieldFragment = `
     float depthFade = mix(0.44, 1.0, vDepth);
     float familyWeight = mix(0.78, 1.14, smoothstep(0.24, 0.7, vFamily));
     float baseAlpha = (0.082 + pulse * 0.15 + micro * 0.045 + vEnergy * 0.055) * depthFade * familyWeight * uIntro;
-    vec3 antiqueGold = vec3(0.8, 0.66, 0.33);
-    vec3 plasmaTeal = vec3(0.34, 0.92, 0.82);
-    vec3 ultraviolet = vec3(0.74, 0.56, 1.0);
-    vec3 whiteHot = vec3(1.0, 0.95, 0.72);
-    vec3 familyColor = antiqueGold;
-    familyColor = mix(familyColor, plasmaTeal, smoothstep(0.42, 0.62, vFamily) * 0.16);
-    familyColor = mix(familyColor, ultraviolet, smoothstep(0.78, 1.0, vFamily) * 0.12);
-    vec3 color = mix(familyColor, whiteHot, clamp(pulse * 0.36 + vEnergy * 0.18, 0.0, 1.0));
+    vec3 obsidian = vec3(0.025, 0.028, 0.065);
+    vec3 ultraviolet = vec3(0.4706, 0.4039, 0.9490);
+    vec3 ionTeal = vec3(0.3843, 0.8471, 0.7804);
+    vec3 moonstone = vec3(0.9255, 0.9255, 0.9569);
+    vec3 familyColor = mix(ultraviolet, ionTeal, smoothstep(0.16, 0.86, vFamily));
+    familyColor = mix(obsidian, familyColor, 0.82);
+    vec3 color = mix(familyColor, moonstone, clamp(pulse * 0.32 + vEnergy * 0.16, 0.0, 0.68));
     gl_FragColor = vec4(color, baseAlpha);
   }
 `;
@@ -165,7 +164,7 @@ export class ToroidalFieldSystem implements SceneSystem {
       new THREE.ShaderMaterial({
         transparent: true,
         depthWrite: false,
-        depthTest: false,
+        depthTest: true,
         blending: THREE.AdditiveBlending,
         vertexShader: fieldVertex,
         fragmentShader: fieldFragment,
