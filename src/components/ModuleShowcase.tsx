@@ -6,7 +6,7 @@ import { portalModules } from "../data/modules";
 export const ModuleShowcase = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const shouldReduceMotion = useReducedMotion();
-  const activeAxis = portalModules[activeIndex];
+  const activeChapter = portalModules[activeIndex];
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     let nextIndex: number;
@@ -24,66 +24,99 @@ export const ModuleShowcase = () => {
 
     event.preventDefault();
     setActiveIndex(nextIndex);
-    document.getElementById(`axis-tab-${nextIndex}`)?.focus();
+    document.getElementById(`editorial-chapter-tab-${nextIndex}`)?.focus();
   };
 
   return (
-    <div className="axis-console">
-      <div className="axis-rail" role="tablist" aria-label="Eixos do Portal da Consciência">
-        {portalModules.map((module, index) => {
-          const isActive = index === activeIndex;
-          return (
-            <button
-              key={module.title}
-              id={`axis-tab-${index}`}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              aria-controls={`axis-panel-${index}`}
-              tabIndex={isActive ? 0 : -1}
-              className={isActive ? "is-active" : ""}
-              onClick={() => setActiveIndex(index)}
-              onKeyDown={(event) => handleKeyDown(event, index)}
-            >
-              <span className="axis-node" aria-hidden="true" />
-              <small>{String(index + 1).padStart(2, "0")}</small>
-              <strong>{module.title}</strong>
-            </button>
-          );
-        })}
+    <div className="editorial-index" data-open-chapter={activeIndex + 1}>
+      <div className="editorial-index-chapters">
+        <div className="editorial-index-caption" aria-hidden="true">
+          <span>Índice do percurso</span>
+          <small>Oito eixos para abrir e revisitar</small>
+        </div>
+
+        <div
+          className="editorial-index-tabs"
+          role="tablist"
+          aria-label="Eixos do Portal da Consciência"
+          aria-orientation="vertical"
+        >
+          {portalModules.map((module, index) => {
+            const isActive = index === activeIndex;
+            return (
+              <button
+                key={module.title}
+                id={`editorial-chapter-tab-${index}`}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`editorial-chapter-panel-${index}`}
+                tabIndex={isActive ? 0 : -1}
+                className={`editorial-index-tab${isActive ? " is-active" : ""}`}
+                onClick={() => setActiveIndex(index)}
+                onKeyDown={(event) => handleKeyDown(event, index)}
+              >
+                <span className="editorial-index-tab-number" aria-hidden="true">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="editorial-index-tab-copy">
+                  <strong>{module.title}</strong>
+                  <small>{module.subtitle}</small>
+                </span>
+                <span className="editorial-index-tab-marker" aria-hidden="true" />
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      <div className="axis-viewport">
-        <div className="axis-viewport-index" aria-hidden="true">
-          {String(activeIndex + 1).padStart(2, "0")}
+      <div className="editorial-index-spread">
+        <span className="editorial-index-paper-edge" aria-hidden="true" />
+        <div className="editorial-index-folio" aria-hidden="true">
+          <span>Portal da Consciência</span>
+          <span>{String(activeIndex + 1).padStart(2, "0")} / 08</span>
         </div>
+
         <AnimatePresence mode="wait" initial={false}>
           <motion.article
-            key={activeAxis.title}
-            id={`axis-panel-${activeIndex}`}
+            key={activeChapter.title}
+            id={`editorial-chapter-panel-${activeIndex}`}
             role="tabpanel"
-            aria-labelledby={`axis-tab-${activeIndex}`}
-            className="axis-panel"
+            aria-labelledby={`editorial-chapter-tab-${activeIndex}`}
+            className="editorial-index-panel"
             initial={shouldReduceMotion ? false : { opacity: 0, x: 24 }}
             animate={shouldReduceMotion ? undefined : { opacity: 1, x: 0 }}
             exit={shouldReduceMotion ? undefined : { opacity: 0, x: -16 }}
             transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
           >
-            <header>
-              <p>Eixo {String(activeIndex + 1).padStart(2, "0")} de 08</p>
-              <h3>{activeAxis.title}</h3>
-              <span>{activeAxis.subtitle}</span>
+            <header className="editorial-index-panel-header">
+              <p className="editorial-index-kicker">
+                Eixo {String(activeIndex + 1).padStart(2, "0")} de 08
+              </p>
+              <h3>{activeChapter.title}</h3>
+              <p className="editorial-index-subtitle">{activeChapter.subtitle}</p>
             </header>
-            <ol className="axis-topics">
-              {activeAxis.bullets.map((bullet, index) => (
+
+            <div className="editorial-index-annotation" aria-hidden="true">
+              <span>anotações desta folha</span>
+              <svg viewBox="0 0 180 22" focusable="false">
+                <path d="M3 15C36 6 70 18 103 10C130 4 151 7 177 3" pathLength="1" />
+              </svg>
+            </div>
+
+            <ol className="editorial-index-topics">
+              {activeChapter.bullets.map((bullet, index) => (
                 <li key={bullet}>
-                  <small>{String(index + 1).padStart(2, "0")}</small>
-                  <span>{bullet}</span>
+                  <small className="editorial-index-topic-number">
+                    {String(index + 1).padStart(2, "0")}
+                  </small>
+                  <span className="editorial-index-topic-copy">{bullet}</span>
                 </li>
               ))}
             </ol>
-            {activeAxis.title === "Biologia da Ascensão" && (
-              <p className="axis-disclaimer">
+
+            {activeChapter.title === "Biologia da Ascensão" && (
+              <p className="editorial-index-disclaimer">
                 Perspectivas espirituais e temas de estudo; não são orientação ou alegação
                 médica ou científica.
               </p>

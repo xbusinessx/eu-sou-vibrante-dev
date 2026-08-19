@@ -4,11 +4,10 @@ import { AnimatedLogo } from "./AnimatedLogo";
 import { TrackedCheckoutButton } from "./TrackedCheckoutButton";
 
 const navItems = [
-  { label: "O Portal", href: "#portal" },
-  { label: "Conteúdo", href: "#conteudo" },
-  { label: "Como funciona", href: "#ritmo" },
-  { label: "Investimento", href: "#investimento" },
-  { label: "Dúvidas", href: "#duvidas" },
+  { label: "Campo", href: "#campo" },
+  { label: "Percurso", href: "#conteudo" },
+  { label: "Acesso", href: "#investimento" },
+  { label: "Margens", href: "#duvidas" },
 ];
 
 export const Header = () => {
@@ -43,6 +42,7 @@ export const Header = () => {
       );
       const progress = Math.min(1, Math.max(0, window.scrollY / scrollRange));
       progressRef.current?.style.setProperty("--reading-progress", String(progress));
+      document.documentElement.style.setProperty("--page-progress", String(progress));
       headerRef.current?.classList.toggle("is-scrolled", window.scrollY > 16);
     };
 

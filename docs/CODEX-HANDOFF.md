@@ -17,31 +17,33 @@ Antes de publicar, confirme esses itens no produto e no checkout Kiwify. Depoime
 
 ## Direção visual
 
-A direção se chama **NÚCLEO 19/8**. Ela substitui a estética figurativa preto+dourado por uma linguagem tecnológica-mística baseada em:
+A direção se chama **Caderno de Campo da Consciência**: um arquivo editorial de investigação do invisível, com base carvão, folhas de papel mineral, gravuras do acervo original e anotações manuscritas curtas.
 
-- Deep Field `#03050A`;
-- Mineral `#0B1020`;
-- Moonstone `#ECECF4`;
-- Ultraviolet `#7867F2`;
-- Ion Teal `#62D8C7`;
-- Ritual Gold `#E8C477`, reservado ao núcleo e aos CTAs de compra.
+Paleta principal:
+
+- carvão `#12100E`;
+- papel `#F0E5CE`;
+- ocre `#D3A038`;
+- violeta de arquivo `#74506F`;
+- ferrugem de correção `#A8513F`.
 
 Tipografia:
 
-- Bricolage Grotesque: display;
-- Instrument Sans: corpo;
-- IBM Plex Mono: dados e sinais curtos.
+- Alegreya: teses, títulos e corpo editorial;
+- Instrument Sans: corpo funcional, navegação e controles;
+- Kalam: somente notas marginais curtas.
 
-O hero parte da tese “Consciência não é uma linha. É um campo.” A cena 3D representa o próprio conteúdo: oito órbitas e dezenove nós em torno de um núcleo de vidro/obsidiana.
+A assinatura é o **fio de leitura**: uma linha ocre que nasce no hero e reaparece como marcador fixo de progresso. As marcas `.is-reading` e `.is-read`, atualizadas por `useReadingMarks`, dão presença ao parágrafo em leitura sem controlar ou alterar a rolagem nativa.
 
 ## Stack e comandos
 
 - Vite + React + TypeScript;
-- Three.js, carregado de forma lazy;
 - Framer Motion;
 - Lucide React;
-- Tailwind permanece no toolchain, mas a landing usa majoritariamente o sistema autoral em `src/styles/globals.css`;
+- Tailwind permanece no toolchain, mas a landing usa o sistema autoral em `src/styles/globals.css`;
 - Node 22.x no deploy.
+
+Three.js e o antigo sistema `src/visuals/chakraField/` permanecem instalados e compiláveis, mas não são importados pela landing. Portanto, não existe canvas nem chunk Three no runtime atual.
 
 Comandos de validação:
 
@@ -54,75 +56,36 @@ npm run dev
 
 ## Arquitetura da página
 
-`src/App.tsx` é o orquestrador. O `main` possui `data-field-scroll-root`; cada capítulo narrativo declara `data-field-chapter`:
+Ordem principal em `src/App.tsx`:
 
-| Capítulo | ID | Papel da cena |
-| --- | --- | --- |
-| 0 | `#topo` | núcleo fechado e deslocado para o hero |
-| 1 | `#chamado` | ruptura e abertura inicial |
-| 2 | `#campo` | expansão da arquitetura 8/19 |
-| 3 | `#portal` | aproximação do produto |
-| 4 | `#conteudo` | reorganização dos eixos e módulos |
-| 5 | `#ritmo` | núcleo menor acompanhando a jornada |
-| 6 | `#investimento` | convergência e fechamento na oferta |
+1. `Header` fixo, índice e progresso de leitura;
+2. `Hero` como abertura de caderno, com CTA direto e fotografia original;
+3. ensaio sobre ruído e integração;
+4. prancha de campo sticky que acompanha os registros de leitura;
+5. dossiê real do produto com três capas originais;
+6. `ModuleShowcase` como índice editorial dos 8 eixos;
+7. `OriginalSlideshow` como contato manual das 20 capas;
+8. jornada de uso;
+9. `OfferCard` como folha de acesso;
+10. FAQ e rodapé.
 
-Depois da narrativa vêm FAQ e rodapé, com fundos mais opacos para encerrar a experiência sem ruído.
+IDs preservados: `topo`, `chamado`, `campo`, `portal`, `conteudo`, `ritmo`, `investimento`, `duvidas` e `aviso-legal`.
 
-Ordem principal:
-
-1. `Header` fixo com progresso de leitura;
-2. `Hero` com CTA direto e quatro fatos do produto;
-3. capítulos de reconhecimento e arquitetura;
-4. objeto do produto gerado em HTML/CSS 3D;
-5. `ModuleShowcase` com os 8 eixos;
-6. `OriginalSlideshow` com as capas reais;
-7. jornada de uso;
-8. `OfferCard`;
-9. FAQ;
-10. `Footer`.
-
-## Cena scroll-linked
-
-Entrada React: `src/components/ScrollFieldExperience.tsx`.
-
-Responsabilidades:
-
-- importar `SceneController` de forma lazy;
-- manter um único canvas fixo durante a narrativa;
-- calcular progresso global, capítulo ativo e progresso local;
-- pausar fora do escopo e quando a aba fica oculta;
-- tratar perda de contexto WebGL;
-- oferecer fallback abstrato em CSS;
-- respeitar `prefers-reduced-motion`.
-
-Arquivos principais em `src/visuals/chakraField/`:
-
-- `SceneController.ts`: ciclo de vida, renderer e composição;
-- `ScrollDirector.ts`: sete poses e interpolação suave;
-- `NucleusSystem.ts`: oito órbitas, dezenove nós e núcleo facetado;
-- `ToroidalFieldSystem.ts`: volume toroidal;
-- `HolographicShellSystem.ts`: casca holográfica;
-- `BackgroundSystem.ts`: campo espacial discreto;
-- `EnergyParticleSystem.ts`: partículas;
-- `CameraController.ts`: câmera e enquadramento;
-- `QualityManager.ts`: tiers de performance e movimento reduzido.
-
-A cena não monta mais figura humana, pilha de chakras ou anéis de ativação legados. O perfil desktop usa aproximadamente 11 draw calls; o perfil mobile usa aproximadamente 7. O mobile limita DPR e FPS.
-
-Não há scroll hijacking. A rolagem continua nativa e o canvas usa `pointer-events: none`.
+A navegação por hash é repetida depois de `document.fonts.ready`, evitando que a troca de fonte desloque o destino em carregamentos diretos com fragmento.
 
 ## Componentes sensíveis
 
 ### `Hero.tsx`
 
-- H1 textual e indexável;
+- H1 textual e único;
+- recupera `hero-desktop.webp`, `hero-mobile.webp` e `portal-title.png`;
 - CTA `hero_checkout` direto ao checkout;
 - CTA secundário `hero_explore_content` para `#conteudo`;
-- acesso, garantia, módulos e eixos visíveis sem claims artificiais.
+- fatos do produto visíveis e sem claims artificiais.
 
 ### `ModuleShowcase.tsx`
 
-- tabs semânticas com roving tabindex;
+- índice vertical com tabs semânticas e roving tabindex;
 - suporte a setas, Home e End;
 - painel ativo identificado por `tabpanel`;
 - ressalva dentro do eixo “Biologia da Ascensão”.
@@ -130,16 +93,16 @@ Não há scroll hijacking. A rolagem continua nativa e o canvas usa `pointer-eve
 ### `OriginalSlideshow.tsx`
 
 - monta apenas a capa ativa e duas adjacentes;
-- pausa automática disponível;
-- autoplay desativado com movimento reduzido;
-- região de carrossel rotulada;
+- navegação deliberadamente manual, sem autoplay;
+- suporte a setas, Home e End;
+- região de carrossel rotulada e live region para a capa ativa;
 - imagens derivadas em `Repositório/optimized/`.
 
 ### `OfferCard.tsx`
 
-- CTA `offer_primary`;
-- desktop em duas colunas;
-- mobile prioriza preço, CTA e garantia antes do manifesto;
+- CTA `offer_primary` acima da dobra do bloco em desktop e mobile;
+- preço, parcelamento e garantia legíveis antes do manifesto recolhível;
+- gravura original em `offer-bg.webp`;
 - sem preço anterior riscado ou urgência artificial.
 
 ### `Header.tsx`
@@ -148,7 +111,8 @@ Não há scroll hijacking. A rolagem continua nativa e o canvas usa `pointer-eve
 - CTA mobile `mobile_header_checkout`;
 - menu informa `aria-expanded`/`aria-controls`;
 - Escape fecha e devolve foco ao botão;
-- navegar move foco ao destino.
+- navegar move foco ao destino;
+- publica `--page-progress` para o fio de leitura.
 
 ## Tracking e checkout
 
@@ -176,9 +140,10 @@ O link do checkout deve vir de `VITE_CHECKOUT_URL`. Nunca exponha tokens privado
 
 Breakpoints principais:
 
-- 1120px: navegação vira menu;
-- 900px: composições principais passam para uma coluna;
-- 640px: ajustes de telefone.
+- 1100px: compactação das composições;
+- 900px: navegação vira menu e layouts principais passam para uma coluna;
+- 680px: telefone;
+- 390px: simplificação do lockup e de detalhes marginais.
 
 Base de acessibilidade:
 
@@ -188,22 +153,20 @@ Base de acessibilidade:
 - landmarks semânticos;
 - foco visível;
 - menu com retorno de foco;
-- tabs operáveis por teclado;
-- carrossel pausável;
-- `prefers-reduced-motion` no DOM e no WebGL;
-- canvas decorativo com `aria-hidden="true"`.
+- tabs e carrossel operáveis por teclado;
+- `prefers-reduced-motion` no DOM;
+- SVGs e marcas decorativas escondidos da árvore acessível;
+- zero scroll hijacking.
 
-Ao alterar transforms ou objetos 3D, teste 1440×900, 1536×776, 912×900, 390×844 e 320×568. Confirme também que `document.documentElement.scrollWidth <= innerWidth`.
+Testes visuais concluídos em 1536×864, 912×900, 390×844 e 320×667. Confirme ao alterar layout que `document.documentElement.scrollWidth <= innerWidth`.
 
 ## Assets e performance
 
 - Os PNGs originais permanecem como fonte.
 - Derivados WebP ficam em `src/assets/optimized/` e `Repositório/optimized/`.
-- Regeneração: `python scripts/optimize_assets.py`.
-- O hero não carrega raster principal.
-- O fallback WebGL é abstrato e gerado em CSS.
-- A cena Three está em chunk lazy separado.
+- A landing reutiliza a figura áurea, a prancha de chakras, o wordmark, o símbolo e as capas reais.
 - O carrossel evita montar as 20 capas ao mesmo tempo.
+- O build atual não emite o antigo chunk lazy de Three.js.
 
 Garanta que os WebP otimizados entrem no commit/deploy; imports ausentes quebram CI.
 
@@ -211,11 +174,9 @@ Garanta que os WebP otimizados entrem no commit/deploy; imports ausentes quebram
 
 1. Rodar typecheck, lint e build.
 2. Revisar a landing em desktop, tablet e telefones estreitos.
-3. Confirmar carregamento WebGL e fallback sem WebGL.
-4. Testar `prefers-reduced-motion`.
-5. Navegar menu e tabs apenas por teclado.
-6. Pausar e avançar o carrossel.
-7. Confirmar todos os CTAs e parâmetros no checkout Kiwify.
-8. Validar preço, parcelamento, garantia, formato e acesso vitalício.
-9. Validar claims e anúncios contra `docs/META-ADS-COMPLIANCE-CHECKLIST.md`.
-10. Conferir política de privacidade e IDs de analytics do ambiente.
+3. Testar `prefers-reduced-motion`.
+4. Navegar menu, tabs e capas apenas por teclado.
+5. Confirmar todos os CTAs e parâmetros no checkout Kiwify.
+6. Validar preço, parcelamento, garantia, formato e acesso vitalício.
+7. Validar claims e anúncios contra `docs/META-ADS-COMPLIANCE-CHECKLIST.md`.
+8. Conferir política de privacidade e IDs de analytics do ambiente.

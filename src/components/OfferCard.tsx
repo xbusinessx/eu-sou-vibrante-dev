@@ -1,4 +1,5 @@
 import { Check, LockKeyhole, ShieldCheck } from "lucide-react";
+import offerArt from "../assets/optimized/offer-bg.webp";
 import { TrackedCheckoutButton } from "./TrackedCheckoutButton";
 
 const includedItems = [
@@ -9,22 +10,33 @@ const includedItems = [
 ];
 
 export const OfferCard = () => (
-  <div className="access-gate">
-    <div className="access-price">
-      <div className="access-price-orbit" aria-hidden="true">
-        <span />
-        <span />
-        <span />
+  <div className="access-letter">
+    <aside className="access-engraving" aria-hidden="true">
+      <img src={offerArt} alt="" loading="lazy" decoding="async" />
+      <span>fig. 06</span>
+      <em>se esse é o seu momento,<br />o portal está aberto</em>
+    </aside>
+
+    <div className="access-sheet">
+      <header>
+        <p className="folio-kicker"><span>06</span> Folha de acesso</p>
+        <h2>O mapa está aberto.<br /><em>A travessia é sua.</em></h2>
+        <p>
+          Entre uma vez e revisite o conteúdo sempre que um novo momento pedir outra leitura.
+        </p>
+      </header>
+
+      <div className="access-price-block">
+        <p>Acesso completo · pagamento único</p>
+        <div className="access-price-value">
+          <small>R$</small>
+          <strong>147</strong>
+          <span>à vista</span>
+        </div>
+        <p className="access-price-installment">
+          ou em até <strong>12x de R$ 15,20</strong>
+        </p>
       </div>
-      <p className="access-price-label">Acesso completo · pagamento único</p>
-      <div className="access-price-value">
-        <small>R$</small>
-        <strong>147</strong>
-        <span>à vista</span>
-      </div>
-      <p className="access-price-installment">
-        ou em até <strong>12x de R$ 15,20</strong>
-      </p>
 
       <TrackedCheckoutButton
         label="Acessar o Portal agora"
@@ -40,32 +52,23 @@ export const OfferCard = () => (
           Se não fizer sentido, solicite o reembolso integral dentro do prazo.
         </p>
       </div>
+
+      <details className="access-manifest-details">
+        <summary>O que está incluído</summary>
+        <ul className="access-manifest">
+          {includedItems.map((item) => (
+            <li key={item}>
+              <Check aria-hidden="true" />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+      </details>
+
       <p className="access-security">
         <LockKeyhole aria-hidden="true" /> Compra processada em ambiente seguro
       </p>
-    </div>
-
-    <div className="access-gate-copy">
-      <div className="section-signal">
-        <span>06</span>
-        <p>Acesso ao núcleo completo</p>
-      </div>
-      <h2>
-        O mapa está aberto.<br />
-        <span>A travessia é sua.</span>
-      </h2>
-      <p className="access-gate-lead">
-        Entre uma vez e revisite o conteúdo sempre que um novo momento pedir outra leitura.
-      </p>
-
-      <ul className="access-manifest">
-        {includedItems.map((item) => (
-          <li key={item}>
-            <Check aria-hidden="true" />
-            <span>{item}</span>
-          </li>
-        ))}
-      </ul>
+      <div className="guarantee-stamp" aria-hidden="true"><b>7</b><span>dias</span></div>
     </div>
   </div>
 );

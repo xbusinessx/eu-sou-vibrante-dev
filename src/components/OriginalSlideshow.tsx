@@ -1,6 +1,6 @@
-import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useReducedMotion } from "framer-motion";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { type KeyboardEvent, useId, useMemo, useState } from "react";
 import slide05 from "../../Repositório/optimized/5.webp";
 import slide06 from "../../Repositório/optimized/6.webp";
 import slide07 from "../../Repositório/optimized/7.webp";
@@ -45,15 +45,11 @@ const slides = [
   { src: slide24, title: "Eternidade e Novos Ciclos", label: "Módulo 19" },
 ];
 
-const AUTOPLAY_INTERVAL_MS = 7200;
-
 export const OriginalSlideshow = () => {
-  const carouselRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-  const [isInView, setIsInView] = useState(false);
   const shouldReduceMotion = useReducedMotion();
+  const instructionsId = useId();
+  const galleryId = useId();
 
   const visibleSlides = useMemo(
     () =>
@@ -64,28 +60,6 @@ export const OriginalSlideshow = () => {
     [activeIndex],
   );
 
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    if (!carousel) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsInView(entry.isIntersecting && entry.intersectionRatio >= 0.3),
-      { threshold: [0, 0.3, 0.6] },
-    );
-    observer.observe(carousel);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (shouldReduceMotion || isPaused || isHovered || !isInView) return;
-
-    const intervalId = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % slides.length);
-    }, AUTOPLAY_INTERVAL_MS);
-
-    return () => window.clearInterval(intervalId);
-  }, [isHovered, isInView, isPaused, shouldReduceMotion]);
-
   const goToPrevious = () => {
     setActiveIndex((current) => (current - 1 + slides.length) % slides.length);
   };
@@ -94,36 +68,87 @@ export const OriginalSlideshow = () => {
     setActiveIndex((current) => (current + 1) % slides.length);
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      goToPrevious();
+    }
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      goToNext();
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      setActiveIndex(0);
+    }
+
+    if (event.key === "End") {
+      event.preventDefault();
+      setActiveIndex(slides.length - 1);
+    }
+  };
+
   const activeSlide = slides[activeIndex];
 
   return (
     <div
-      ref={carouselRef}
-      className="original-slideshow"
+      className={`original-slideshow editorial-contact-sheet${
+        shouldReduceMotion ? " is-reduced-motion" : ""
+      }`}
       role="region"
       aria-roledescription="carrossel"
       aria-label="Prévia das capas dos módulos"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onFocusCapture={() => setIsHovered(true)}
-      onBlurCapture={() => setIsHovered(false)}
+      aria-describedby={instructionsId}
+      aria-keyshortcuts="ArrowLeft ArrowRight Home End"
+      data-reduced-motion={shouldReduceMotion ? "true" : "false"}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
     >
-      <div className="slideshow-stage">
-        <div className="slideshow-orbit" aria-hidden="true" />
-        <div className="slideshow-covers" aria-hidden="true">
+      <p id={instructionsId} className="sr-only">
+        Galeria manual. Use as setas para a esquerda e para a direita para folhear as capas. Use
+        Início e Fim para ir à primeira ou à última capa.
+      </p>
+
+      <div className="slideshow-contact-heading" aria-hidden="true">
+        <span>Arquivo do Portal</span>
+        <span>20 folhas · introdução + 19 módulos</span>
+      </div>
+
+      <div className="slideshow-stage slideshow-contact-stage">
+        <div className="slideshow-contact-register" aria-hidden="true">
+          <span>PC · 19/8</span>
+          <span>folha {String(activeIndex + 1).padStart(2, "0")}</span>
+        </div>
+
+        <div id={galleryId} className="slideshow-covers slideshow-sheet-stack">
           {visibleSlides.map((slide) => (
             <figure
               key={slide.index}
-              className={`slide-cover ${
+              className={`slide-cover slideshow-sheet ${
                 slide.offset === 0 ? "is-active" : slide.offset < 0 ? "is-prev" : "is-next"
               }`}
+              data-sheet-position={
+                slide.offset === 0 ? "active" : slide.offset < 0 ? "previous" : "next"
+              }
+              aria-hidden={slide.offset !== 0}
             >
-              <img
-                src={slide.src}
-                alt=""
-                loading={slide.offset === 0 ? "eager" : "lazy"}
-                decoding="async"
-              />
+              <span className="slideshow-sheet-number" aria-hidden="true">
+                {String(slide.index + 1).padStart(2, "0")}
+              </span>
+              <div className="slideshow-sheet-image">
+                <img
+                  src={slide.src}
+                  alt={slide.offset === 0 ? `Capa de ${slide.label}: ${slide.title}` : ""}
+                  loading={slide.offset === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              </div>
+              <figcaption className="slideshow-sheet-caption" aria-hidden="true">
+                <span>{slide.label}</span>
+                <strong>{slide.title}</strong>
+              </figcaption>
             </figure>
           ))}
         </div>
@@ -131,7 +156,8 @@ export const OriginalSlideshow = () => {
         <button
           type="button"
           className="slideshow-arrow slideshow-arrow-prev"
-          aria-label="Ver módulo anterior"
+          aria-label="Ver capa anterior"
+          aria-controls={galleryId}
           onClick={goToPrevious}
         >
           <ChevronLeft aria-hidden="true" />
@@ -139,33 +165,28 @@ export const OriginalSlideshow = () => {
         <button
           type="button"
           className="slideshow-arrow slideshow-arrow-next"
-          aria-label="Ver próximo módulo"
+          aria-label="Ver próxima capa"
+          aria-controls={galleryId}
           onClick={goToNext}
         >
           <ChevronRight aria-hidden="true" />
         </button>
       </div>
 
-      <div className="slideshow-meta">
-        <div aria-live={isHovered ? "polite" : "off"} aria-atomic="true">
+      <div className="slideshow-meta slideshow-contact-meta">
+        <div className="slideshow-active-copy" aria-live="polite" aria-atomic="true">
           <p>{activeSlide.label}</p>
           <h4>{activeSlide.title}</h4>
         </div>
 
-        <div className="slideshow-status">
-          <span>{String(activeIndex + 1).padStart(2, "0")} / {slides.length}</span>
-          <div aria-hidden="true">
+        <div className="slideshow-status slideshow-manual-status">
+          <span>
+            {String(activeIndex + 1).padStart(2, "0")} / {slides.length}
+          </span>
+          <div className="slideshow-progress" aria-hidden="true">
             <i style={{ width: `${((activeIndex + 1) / slides.length) * 100}%` }} />
           </div>
-          {!shouldReduceMotion && (
-            <button
-              type="button"
-              aria-label={isPaused ? "Retomar reprodução automática" : "Pausar reprodução automática"}
-              onClick={() => setIsPaused((current) => !current)}
-            >
-              {isPaused ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}
-            </button>
-          )}
+          <span className="slideshow-manual-label">folheio manual</span>
         </div>
       </div>
     </div>
