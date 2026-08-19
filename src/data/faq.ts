@@ -7,40 +7,41 @@ export const faqItems: FaqItem[] = [
   {
     question: "O que exatamente é o Portal da Consciência?",
     answer:
-      "O Portal da Consciência é um espaço de estudo e refinamento perceptivo. Os conteúdos apresentam a estrutura da realidade, dos campos sutis, da consciência e dos processos vibracionais de forma clara. É um campo de compreensão que organiza princípios universais (presença, identidade, vibração, arquitetura da realidade e relação entre planos) para que você reconheça como a experiência humana se forma de dentro para fora. O propósito é ampliar lucidez e coerência, não substituir sua percepção por conceitos externos.",
+      "É um programa digital de estudos e práticas, entregue em uma plataforma on-line. A jornada reúne 19 módulos organizados em 8 eixos sobre consciência, percepção, presença, campos sutis e integração, além de orientações aplicáveis e frequências sonoras de apoio.",
   },
   {
-    question: "O Portal promete resultados?",
+    question: "Qual é a abordagem do conteúdo?",
     answer:
-      "O Portal foi cuidadosamente estruturado para refletir, com fidelidade, o potencial real de transformação humana e espiritual. Ele oferece entendimento profundo, coerência vibracional e práticas que podem apoiar sua lucidez interna. O que acontece a partir disso depende da sua disposição e escuta.",
+      "A abordagem é espiritual e integrativa, apresentada como uma visão organizada para estudo e reflexão. O Portal não exige adesão religiosa, não apresenta suas ideias como comprovação científica e não promete um resultado específico. A experiência depende da forma como cada pessoa estuda e aplica o conteúdo.",
   },
   {
     question: "Preciso ter experiência com espiritualidade para acompanhar?",
     answer:
-      "Não. O conteúdo foi construído para qualquer pessoa interessada em compreender a realidade com mais profundidade, sem pré-requisitos espirituais, esotéricos ou religiosos.",
+      "Não. Não existem pré-requisitos. Alguns temas são profundos e usam uma linguagem espiritual, mas o percurso foi organizado para que você avance do fundamento à integração no seu ritmo.",
   },
   {
     question: "O Portal segue alguma religião ou doutrina?",
     answer:
-      "Não. O Portal não está vinculado a nenhuma religião, embora utilize conhecimentos presentes em tradições antigas que, ao longo do tempo, deram origem a diferentes caminhos espirituais. Esses conteúdos são apresentados de forma estrutural e não dogmática, orientados pela coerência vibracional e pela compreensão da consciência.",
+      "Não. O conteúdo dialoga com conhecimentos presentes em tradições antigas e diferentes caminhos espirituais, mas é apresentado sem vínculo institucional com uma religião e sem exigir crença ou prática doutrinária.",
   },
   {
     question: "Existem práticas ou apenas teoria?",
     answer:
-      "O Portal reúne conhecimento estrutural e aplicação prática. Como princípios que você incorpora, não como exercícios guiados. Ao longo dos módulos, você encontra fundamentos de percepção, presença, coerência vibracional, organização do campo, clareza mental e alinhamento. Conforme avança, você também terá acesso a orientações aplicáveis sobre coerência respiratória, alimentação, luz solar, jejum, meditação, água estruturada, aterramento, desparasitação, organização do campo emocional, ajustes vibracionais etc. Tudo é apresentado de forma direta e consciente, para que você compreenda a lógica por trás e aplique no seu ritmo. As frequências sonoras estão disponíveis como apoio vibracional durante o processo.",
+      "Os dois. Os módulos apresentam fundamentos e também orientações aplicáveis sobre presença, respiração, meditação, aterramento, rotina e percepção. As práticas são convites de experimentação, não substituem acompanhamento médico ou psicológico, e podem ser adaptadas ao seu contexto.",
   },
   {
-    question: "O acesso é vitalício?",
-    answer: "Sim. Você pode retornar ao conteúdo quantas vezes quiser, sem prazo de expiração.",
+    question: "Quanto tempo preciso reservar?",
+    answer:
+      "Não há uma carga horária obrigatória. Você pode avançar em pequenas sessões, pausar e retomar quando quiser. Como o acesso é vitalício, não existe pressão para concluir tudo rapidamente.",
   },
   {
     question: "Como recebo o acesso?",
     answer:
-      "Após a confirmação da compra, chega automaticamente em seu e-mail um login e senha para entrar na plataforma. Sem esperas e sem burocracia.",
+      "Após a confirmação da compra, o login e as instruções de acesso são enviados automaticamente para o e-mail informado no checkout. Verifique também as pastas de promoções e spam.",
   },
   {
-    question: "E se não fizer sentido para mim?",
+    question: "O acesso é vitalício? E como funciona a garantia?",
     answer:
-      "Você tem 7 dias para sentir com lucidez. Se perceber que não é o momento, pode solicitar reembolso integral. Sem perguntas e sem constrangimento.",
+      "Sim, o acesso ao conteúdo adquirido é vitalício. Você também tem 7 dias corridos após a compra para conhecer a plataforma. Se não fizer sentido para você, pode solicitar o reembolso integral dentro desse prazo pelos canais de suporte.",
   },
 ];

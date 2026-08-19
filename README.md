@@ -1,6 +1,6 @@
 # Eu Sou Vibrante
 
-Landing page premium para o produto **Portal da Consciência**, construída em Vite, React e TypeScript, com estética cósmica/espiritual sofisticada e arquitetura pronta para tracking futuro.
+Landing page de conversão para o **Portal da Consciência**, um programa digital de estudos e práticas com 19 módulos organizados em 8 eixos. A experiência usa cartografia cósmica, profundidade 2.5D e um mapa vibracional interativo, preservando tracking e atribuição de checkout.
 
 ## Stack
 
@@ -25,6 +25,16 @@ npm run build
 ```
 
 O output final é gerado em `dist/`.
+
+## Assets otimizados
+
+Os PNGs originais permanecem como arquivos-fonte. A landing consome derivados WebP leves em `src/assets/optimized/` e `Repositório/optimized/`. Para regenerá-los após alterar uma arte, execute com Python e Pillow:
+
+```bash
+python scripts/optimize_assets.py
+```
+
+O carrossel monta somente a capa ativa e as duas adjacentes, evitando carregar as 20 capas de uma vez no navegador.
 
 ## Preview local
 

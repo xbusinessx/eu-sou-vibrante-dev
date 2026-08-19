@@ -1,5 +1,7 @@
 # Handoff completo para Codex
 
+> **Atualização de 19/08/2026:** a landing foi redesenhada por completo. A fonte de verdade é o código atual. O produto agora é apresentado como um programa digital de estudos e práticas com 19 módulos organizados em 8 eixos; o antigo contador de presença e a oferta de saída não são mais montados. O novo sistema visual está concentrado em `src/styles/globals.css`, `Hero.tsx`, `MeditationEnergyAnimation.tsx`, `ModuleShowcase.tsx` e `OriginalSlideshow.tsx`. Os assets servidos estão em WebP e podem ser regenerados com `scripts/optimize_assets.py`. As descrições históricas abaixo são contexto legado quando divergirem desses arquivos.
+
 Este documento foi escrito para que outro Codex, em outro chat ou outra conta, consiga entrar neste repositório e entender a estrutura do site sem depender do histórico desta conversa. Ele descreve arquitetura, fluxo de dados, rastreamento, responsividade, assets, riscos conhecidos e validações esperadas antes de publicar.
 
 Se houver divergência entre este documento e o código, o código vence. Atualize este arquivo quando mudar arquitetura, tracking, contratos de CTA, IDs de seção, assets essenciais ou comportamento mobile.

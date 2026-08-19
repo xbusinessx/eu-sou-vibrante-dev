@@ -1,75 +1,135 @@
 import { motion, useReducedMotion } from "framer-motion";
-import heroImage from "../assets/original/hero-desktop.png";
-import heroMobileImage from "../assets/original/hero-mobile.png";
-import portalTitle from "../assets/original/portal-title.png";
-import { LivePresenceWidget } from "./LivePresenceWidget";
+import { Check, ShieldCheck } from "lucide-react";
+import { useRef } from "react";
+import type { PointerEvent } from "react";
+import heroImage from "../assets/optimized/hero-desktop.webp";
+import heroMobileImage from "../assets/optimized/hero-mobile.webp";
+import { TrackedCheckoutButton } from "./TrackedCheckoutButton";
 import { TrackedSectionLink } from "./TrackedSectionLink";
 
 export const Hero = () => {
   const shouldReduceMotion = useReducedMotion();
+  const artRef = useRef<HTMLDivElement | null>(null);
+
+  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
+    if (shouldReduceMotion || !artRef.current) return;
+
+    const rect = artRef.current.getBoundingClientRect();
+    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+    const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+    artRef.current.style.setProperty("--hero-shift-x", `${(x * 7).toFixed(2)}px`);
+    artRef.current.style.setProperty("--hero-shift-y", `${(y * 5).toFixed(2)}px`);
+    artRef.current.style.setProperty("--hero-rotate-y", `${(-6 + x * 3).toFixed(2)}deg`);
+    artRef.current.style.setProperty("--hero-rotate-x", `${(-y * 2).toFixed(2)}deg`);
+  };
+
+  const resetPointer = () => {
+    artRef.current?.style.setProperty("--hero-shift-x", "0px");
+    artRef.current?.style.setProperty("--hero-shift-y", "0px");
+    artRef.current?.style.setProperty("--hero-rotate-y", "-6deg");
+    artRef.current?.style.setProperty("--hero-rotate-x", "0deg");
+  };
 
   return (
-    <section
-      id="topo"
-      data-track-section="hero"
-      className="hero-section relative overflow-hidden pb-12 pt-28 md:min-h-[90vh] md:pb-0 md:pt-28"
-    >
-      <div className="hero-original-bg absolute inset-0">
-        <picture className="block h-full w-full">
-          <source media="(max-width: 767px)" srcSet={heroMobileImage} sizes="100vw" />
-          <img
-            src={heroImage}
-            alt="Arte original do Portal da Consciência com figura luminosa e campo vibracional dourado"
-            className="hero-original-image h-full w-full object-cover object-[72%_center]"
-            decoding="async"
-            fetchPriority="high"
-            loading="eager"
-            sizes="100vw"
-          />
-        </picture>
-        <div className="hero-original-glow" />
-        <div className="hero-mobile-energy" aria-hidden="true" />
-        <div className="hero-mobile-sparks" aria-hidden="true" />
-        <div className="hero-original-veil absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.58)_35%,rgba(0,0,0,0.03)_100%)]" />
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black to-transparent" />
-      </div>
+    <section id="topo" data-track-section="hero" className="hero-section">
+      <div className="hero-grid" aria-hidden="true" />
+      <div className="hero-sun" aria-hidden="true" />
 
-      <div className="hero-content relative flex w-full items-start pb-8 md:min-h-[calc(90vh-7rem)] md:pb-16">
+      <div className="hero-shell">
         <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 26 }}
+          className="hero-copy"
+          initial={shouldReduceMotion ? false : { opacity: 0, y: 28 }}
           animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="hero-copy w-full min-w-0"
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <div className="mb-5 flex items-center md:mb-7">
-            <img
-              src={portalTitle}
-              alt="Portal da Consciência"
-              className="max-h-20 w-auto max-w-[min(82vw,360px)] object-contain md:max-h-24"
-            />
-          </div>
-          <h1 className="hero-title">
-            Um portal vivo de reconexão com a realidade que vibra dentro de você.
-          </h1>
-          <p className="mt-6 max-w-[21rem] text-base leading-7 text-pearl/[0.76] md:max-w-2xl md:text-xl md:leading-8">
-            Para quem está pronto para sair do ruído, acessar o campo e reorganizar sua
-            realidade de dentro para fora.
+          <p className="hero-kicker">
+            <span aria-hidden="true" />
+            Programa digital de estudos
+            <i>•</i>
+            Acesso vitalício
           </p>
 
-          <div className="mt-7 flex flex-col gap-4 sm:flex-row md:mt-9">
-            <TrackedSectionLink
-              href="#chamado"
-              label="Saiba mais"
-              ctaId="hero_learn_more"
+          <h1 className="hero-title">
+            Atravesse o ruído.<br />
+            <em>Volte ao centro.</em>
+          </h1>
+
+          <p className="hero-description">
+            Uma jornada visual por <strong>19 módulos organizados em 8 eixos</strong> para estudar
+            consciência, percepção e presença com mais estrutura — no seu ritmo.
+          </p>
+
+          <div className="hero-actions">
+            <TrackedCheckoutButton
+              label="Acessar por R$ 147"
+              ctaId="hero_checkout"
               section="hero"
-              variant="primary"
+              className="hero-primary-cta"
+            />
+            <TrackedSectionLink
+              href="#conteudo"
+              label="Explorar os 19 módulos"
+              ctaId="hero_explore_content"
+              section="hero"
+              variant="secondary"
               endIcon="down"
+              className="hero-secondary-cta"
             />
           </div>
 
-          <LivePresenceWidget />
+          <div className="hero-assurances" aria-label="Condições de acesso">
+            <span><Check aria-hidden="true" />Acesso imediato por e-mail</span>
+            <span><ShieldCheck aria-hidden="true" />7 dias de garantia</span>
+          </div>
+        </motion.div>
+
+        <motion.div
+          className="hero-art-column"
+          initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.94, x: 38 }}
+          animate={shouldReduceMotion ? undefined : { opacity: 1, scale: 1, x: 0 }}
+          transition={{ duration: 1.1, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+          aria-hidden="true"
+        >
+          <div
+            className="hero-art-shell"
+            ref={artRef}
+            onPointerMove={handlePointerMove}
+            onPointerLeave={resetPointer}
+          >
+            <span className="hero-portal-frame hero-portal-frame-back" />
+            <span className="hero-portal-frame hero-portal-frame-mid" />
+
+            <div className="hero-art-card">
+              <picture>
+                <source media="(max-width: 767px)" srcSet={heroMobileImage} />
+                <img
+                  src={heroImage}
+                  alt=""
+                  decoding="async"
+                  loading="eager"
+                />
+              </picture>
+              <div className="hero-art-shade" />
+            </div>
+
+            <span className="hero-orbit hero-orbit-a" />
+            <span className="hero-orbit hero-orbit-b" />
+            <span className="hero-orbit hero-orbit-c" />
+            <span className="hero-energy-core" />
+
+            <span className="hero-coordinate hero-coordinate-a">
+              <i /> CAMPO / 08
+            </span>
+            <span className="hero-coordinate hero-coordinate-b">PRESENÇA / 01</span>
+            <span className="hero-coordinate hero-coordinate-c">40.7° / AGORA</span>
+          </div>
         </motion.div>
       </div>
+
+      <a className="hero-scroll-cue" href="#chamado" aria-label="Continuar para a próxima seção">
+        <span />
+        <small>Iniciar travessia</small>
+      </a>
     </section>
   );
 };

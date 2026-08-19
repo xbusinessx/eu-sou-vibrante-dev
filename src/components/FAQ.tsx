@@ -25,7 +25,7 @@ export const FAQ = () => {
   };
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="faq-shell">
       <div className="faq-stack">
         {faqItems.map((item, index) => {
           const isOpen = openIndex === index;
@@ -67,7 +67,11 @@ export const FAQ = () => {
         })}
       </div>
 
-      <div className="mt-10 flex justify-center">
+      <div className="faq-support">
+        <div>
+          <strong>Ainda quer conversar antes de decidir?</strong>
+          <span>O suporte responde suas dúvidas sobre acesso, formato e pagamento.</span>
+        </div>
         <TrackedSectionLink
           href={WHATSAPP_SUPPORT_URL}
           label="Falar com o suporte"

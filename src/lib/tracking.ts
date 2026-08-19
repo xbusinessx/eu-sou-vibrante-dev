@@ -52,7 +52,7 @@ const PRODUCT_EVENT_PARAMS: EventParams = {
   currency: "BRL",
   value: 147,
   content_name: "Portal da Consciência",
-  content_category: "Curso online",
+  content_category: "Programa digital de estudos",
   content_type: "product",
   content_ids: ["portal-da-consciencia"],
   num_items: 1,
@@ -62,7 +62,7 @@ const GA4_CHECKOUT_ITEMS: EventValue[] = [
   {
     item_id: "portal-da-consciencia",
     item_name: "Portal da Consciência",
-    item_category: "Curso online",
+    item_category: "Programa digital de estudos",
     price: 147,
     quantity: 1,
   },
